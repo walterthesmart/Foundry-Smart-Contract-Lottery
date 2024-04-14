@@ -5,7 +5,7 @@ pragma solidity ^0.8.18;
 import {Script, console} from "forge-std/Script.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
 import {VRFCoordinatorV2Mock} from "@chainlink/contracts/src/v0.8/mocks/VRFCoordinatorV2Mock.sol";
-import {LinkTokenInterface} from "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
+import {LinkToken} from "../test/mocks/LinkToken.sol";
 
 contract CreateSubscription is Script {
 
@@ -34,6 +34,7 @@ contract CreateSubscription is Script {
 
 contract FundSubscription is Script {
     uint96 public constant FUND_AMOUNT = 3 ether;
+    
 
     function fundSubscriptionUsingConfig() public {
         // Fund a subscription
@@ -54,10 +55,13 @@ contract FundSubscription is Script {
         }
         else {
             console.log("Funding on a local blockchain");
+            console.log(LinkToken(linkToken).balanceOf(msg.sender));
+            console.log(msg.sender);
+            console.log(LinkToken(linkToken).balanceOf(address(this)));
+            console.log(address(this));
             vm.startBroadcast();
-            LinkTokenInterface(linkToken).transferAndCall(vrfCoordinator, FUND_AMOUNT, abi.encode(subscriptionId));
+            LinkToken(linkToken).transferAndCall(vrfCoordinator, FUND_AMOUNT, abi.encode(subscriptionId));
             vm.stopBroadcast();
-
         }
         console.log("Subscription funded with: ", FUND_AMOUNT);
     }
