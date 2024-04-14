@@ -120,7 +120,7 @@ contract HelperConfig is Script {
             vrfCoordinator: address(vrfCoordinatorMock),
             gasLane: 0xd4bb89654db74673a187bd804519e65e3f71a52bc55f11da7601a13dcf505314,
             subscriptionId: 0, //our script will add this
-            callbackGasLimit: 500000
+            callbackGasLimit: 500000,
             linkToken: address(link) //500,000 gas
         });
     }
