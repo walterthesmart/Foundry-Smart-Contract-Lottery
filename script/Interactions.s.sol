@@ -5,6 +5,7 @@ pragma solidity ^0.8.18;
 import {Script, console} from "forge-std/Script.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
 import {VRFCoordinatorV2Mock} from "@chainlink/contracts/src/v0.8/mocks/VRFCoordinatorV2Mock.sol";
+import {LinkTokenInterface} from "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
 
 contract CreateSubscription is Script {
 
@@ -15,7 +16,7 @@ contract CreateSubscription is Script {
         return createSubscription(vrfCoordinator);
     }
 
-    function createSubscription(address vrfCoordinator) public returns(uint6){
+    function createSubscription(address vrfCoordinator) public returns(uint64){
         console.log("Creating a subscription on chainId: ", block.chainid);
         vm.startBroadcast();
         uint64 subscriptionId = VRFCoordinatorV2Mock(vrfCoordinator).createSubscription();
@@ -37,7 +38,7 @@ contract FundSubscription is Script {
     function fundSubscriptionUsingConfig() public {
         // Fund a subscription
         HelperConfig helperConfig = new HelperConfig();
-        (, , address vrfCoordinator, , uint64 subscriptionId,address linkToken) = helperConfig.activeNetworkConfig();
+        (, , address vrfCoordinator, , uint64 subscriptionId, ,address linkToken) = helperConfig.activeNetworkConfig();
         fundSubscription(vrfCoordinator, subscriptionId, linkToken);
     }
 
@@ -55,6 +56,8 @@ contract FundSubscription is Script {
             console.log("Funding on a local blockchain");
             vm.startBroadcast();
             LinkTokenInterface(linkToken).transferAndCall(vrfCoordinator, FUND_AMOUNT, abi.encode(subscriptionId));
+            vm.stopBroadcast();
+
         }
         console.log("Subscription funded with: ", FUND_AMOUNT);
     }
