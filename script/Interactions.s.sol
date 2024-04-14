@@ -69,7 +69,26 @@ contract FundSubscription is Script {
 }
 
 contract AddConsumer is Script {
-    function run() external {
 
+    function addConsumerUsingConfig(address raffle) public {
+        // Add a consumer
+        HelperConfig helperConfig = new HelperConfig();
+        (, ,address vrfCoordinator, ,uint64 subscriptionId, ,) = helperConfig.activeNetworkConfig();
+        addConsumer(raffle, vrfCoordinator, subscriptionId);
+    }
+
+    function addConsumer(address raffle, address vrfCoordinator, uint64 subscriptionId) public {
+        console.log("Adding a consumer on chainId: ", block.chainid);
+        vm.startBroadcast();
+        VRFCoordinatorV2Mock(vrfCoordinator).addConsumer(subscriptionId, raffle);
+        vm.stopBroadcast();
+        console.log("Consumer added");
+    }
+    function run() external {
+        address raffle = DevOpsTools.get_most_recent_deployment(
+            "Raffle",
+            block.chainid
+        );
+        addConsumerUsingConfig(raffle);
     }
 }
