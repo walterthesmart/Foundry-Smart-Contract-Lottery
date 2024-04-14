@@ -6,6 +6,7 @@ import {Script, console} from "forge-std/Script.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
 import {VRFCoordinatorV2Mock} from "@chainlink/contracts/src/v0.8/mocks/VRFCoordinatorV2Mock.sol";
 import {LinkToken} from "../test/mocks/LinkToken.sol";
+import {DevOpsTools} from "foundry-devops/src/DevOpsTools.sol";
 
 contract CreateSubscription is Script {
 
@@ -64,5 +65,11 @@ contract FundSubscription is Script {
             vm.stopBroadcast();
         }
         console.log("Subscription funded with: ", FUND_AMOUNT);
+    }
+}
+
+contract AddConsumer is Script {
+    function run() external {
+
     }
 }
