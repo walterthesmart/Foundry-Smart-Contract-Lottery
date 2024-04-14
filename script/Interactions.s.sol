@@ -30,3 +30,14 @@ contract CreateSubscription is Script {
         return createSubscriptionUsingConfig();
     }
 }
+
+contract FundSubscription is Script {
+    uint96 public constant FUND_AMOUNT = 3 ether;
+
+    function fundSubscriptionUsingConfig() public {
+        // Fund a subscription
+        HelperConfig helperConfig = new HelperConfig();
+        (, , address vrfCoordinator, , uint64 subscriptionId, ) = helperConfig.activeNetworkConfig();
+        fundSubscription(vrfCoordinator, subscriptionId);
+    }
+}
